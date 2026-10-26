@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NEET Mock Test 4</title>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--tx:#1f2933;--mu:#667085;--bd:#e3e1da;--ac:#1d6fb8;--acx:#fff;--ok:#1a7f4b;--okb:#e3f4ea;--no:#b42318;--nob:#fde8e6;--sel:#e6f0fa;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181c;--card:#1f2429;--tx:#e8eaed;--mu:#9aa3ad;--bd:#333a42;--ac:#5aa9ec;--acx:#0b1620;--ok:#5fd39b;--okb:#17372a;--no:#ff8a80;--nob:#3d1d1a;--sel:#1b3550;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15181c;--card:#1f2429;--tx:#e8eaed;--mu:#9aa3ad;--bd:#333a42;--ac:#5aa9ec;--acx:#0b1620;--ok:#5fd39b;--okb:#17372a;--no:#ff8a80;--nob:#3d1d1a;--sel:#1b3550;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:14px}
+h1{font-size:1.5rem;margin:0 0 6px}h2{font-size:1.1rem;margin:0 0 10px}
+.mu{color:var(--mu);font-size:.92rem}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:10px 16px}
+button.p{background:var(--ac);color:var(--acx);border-color:var(--ac);font-weight:600}
+button:disabled{opacity:.45;cursor:default}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.timer{font-weight:700;font-variant-numeric:tabular-nums}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border-radius:10px;border:1px solid var(--bd);background:var(--card)}
+.opt.sel{background:var(--sel);border-color:var(--ac)}
+.opt.ok{background:var(--okb);border-color:var(--ok)}
+.opt.no{background:var(--nob);border-color:var(--no)}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:12px}
+.pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:6px}
+.pal button{padding:8px 0;font-size:.9rem}
+.pal .done{background:var(--sel);border-color:var(--ac)}
+.pal .cur{outline:2px solid var(--ac)}
+.pal .ok{background:var(--okb);border-color:var(--ok)}
+.pal .no{background:var(--nob);border-color:var(--no)}
+.score{font-size:2.2rem;font-weight:800}
+.stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px}
+.ex{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bg);font-size:.93rem}
+.tag{font-weight:700}
+.hide{display:none}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+// ===== EDIT HERE: questions, marking and time =====
+const TITLE = "NEET Mock Test 4";
+const DURATION_MIN = 100;   // test time in minutes (1 hour 40 minutes)
+const MARKS_RIGHT = 4;     // NEET: +4 for correct
+const MARKS_WRONG = -1;    // NEET: -1 for wrong
+const Q=(q,options,answer,explain)=>({q,options,answer,explain});
+const AR=["Both Assertion and Reason are true and the reason is the correct explanation of the assertion","Both Assertion and Reason are true but the reason is not the correct explanation of the assertion","Assertion is true statement but Reason is false","Both Assertion and Reason are false statements"];
+const QUESTIONS = [
+Q("Identify the group of ‘taxa’ belonging to the same taxonomic category.",["Triticum, Poaceae, Poales","Anacardiaceae, Sapindales, Dicotyledonae","Diptera, Sapindales, Poales","Poaceae, Solanaceae, Petunia"],2,"Diptera, Sapindales and Poales are all orders. The other groups mix genus, family, order and class."),
+Q("Select the correct sequence of events that take place during meiosis. (i) Reduction in the number of chromosomes (ii) The crossing over is completed (iii) The bivalent chromosomes align themselves on the equatorial plate (iv) Chromatids move to the opposite pole",["(ii) → (iii) → (i) → (iv)","(ii) → (iii) → (iv) → (i)","(iii) → (ii) → (i) → (iv)","(iii) → (i) → (ii) → (iv)"],0,"Crossing over ends in pachytene, bivalents align in metaphase I, chromosome number is reduced in anaphase I, and chromatids separate in anaphase II."),
+Q("Meiosis II is called equational division because during this division,",["Two daughter cells are formed with equal size","The number of chromosomes in the daughter cells remains the same as in the cell produced at the end of meiosis I","The number of chromosomes remains the same as that of the diploid parent cell before meiosis I","There is separation of homologous chromosomes"],1,"Meiosis II keeps the chromosome number the same as in the cells formed after meiosis I, like a mitotic division."),
+Q("Daughter cells formed after meiosis II are genetically",["Similar to each other as well as to the parent cell","Dissimilar to each other but similar to the parent cell","Dissimilar to each other as well as to the parent cell","Similar to each other but dissimilar to the parent cell"],2,"Crossing over and independent assortment make the four cells different from each other and from the parent."),
+Q("How many generations of mitosis are required to produce 64 cells from one cell?",["63","16","8","6"],3,"2⁶ = 64, so 6 generations."),
+Q("The core of eukaryotic cilia and flagella is called axoneme, which is made up of",["Filament, hook and basal body","9 centrally located doublets and 2 microtubules at periphery","2 centrally located microtubules and 9 doublets at periphery","Central hub and 11 peripheral doublets"],2,"The axoneme has a 9 + 2 arrangement: 9 peripheral doublets around 2 central microtubules."),
+Q("Synaptonemal complex forms at (A) stage and dissolves at (B) stage. Complete the statement by choosing the correct option for (A) and (B).",["(A) Zygotene; (B) Pachytene","(A) Pachytene; (B) Diplotene","(A) Zygotene; (B) Diplotene","(A) Zygotene; (B) Diakinesis"],2,"The synaptonemal complex forms during zygotene and dissolves at diplotene."),
+Q("Complete the statements by choosing the correct option. a. ____ protein synthesis in G₂ phase. b. ____ protein synthesis in S phase. c. ____ synthesis in G₁ phase.",["a – Tubulin, b – Histone, c – Deoxyribonucleotides","a – Histone, b – Tubulin, c – ATP","a – Tubulin, b – Histone, c – DNA","a – Histone, b – Tubulin, c – RNA"],0,"Tubulin is made in G₂ for the spindle, histones are made in S phase along with DNA, and deoxyribonucleotides are made in G₁."),
+Q("Which of the given statements is/are true for endoplasmic reticulum? (a) Cisternae are usually attached with the 50S subunit of 80S ribosomes. (b) Ribosomes present on RER are involved in protein synthesis. (c) Synthesis as well as processing and packaging of lipids is performed by SER.",["(a) only","(a) and (b)","(b) only","(a) and (c)"],2,"(a) is false because the large subunit of an 80S ribosome is 60S. (c) is false because processing and packaging are done by the Golgi apparatus."),
+Q("The event which occurs in mitotic metaphase is",["Chromosomal material starts to condense to form compact mitotic chromosomes","Spindle fibres attach to kinetochores of chromosomes","Initiation of assembly of mitotic spindle","Endomembrane system begins to disappear along with nuclear membrane"],1,"At metaphase, spindle fibres attach to the kinetochores and the chromosomes line up at the equator."),
+Q("Assertion (A): Lower the taxa, lesser are the characteristics that the members within the taxon share. Reason (R): As we go higher from species to kingdom, the number of common characteristics goes on increasing.",AR,3,"Lower taxa share more characteristics, and higher taxa share fewer. Both statements are false."),
+Q("Which of the given events occur in G₁ phase of the cell cycle? (A) ATP synthesis (B) Centriole duplication (C) RNA synthesis (D) Duplication of mitochondria",["Both (A) and (B)","Both (A) and (C)","Both (B) and (C)","Both (C) and (D)"],1,"ATP and RNA synthesis occur in G₁. Centriole duplication is in S phase, and organelle duplication is placed in G₂ here."),
+Q("What will be the amount of DNA in a meiosis II product, if the DNA is 32 picogram in its meiocyte at G₂ phase?",["32 pg","64 pg","16 pg","8 pg"],3,"G₂ meiocyte = 32 pg. After meiosis I each cell has 16 pg. After meiosis II each cell has 8 pg."),
+Q("Choose the odd one w.r.t. Musca domestica.",["It is the scientific name for housefly","Musca represents the generic name","This species is kept in order Insecta","domestica is the specific epithet"],2,"Insecta is a class, not an order."),
+Q("Consider the following statements and choose the correct option. Statement A: The interphase nucleus has a loose and extended network of nucleoprotein fibres called chromatin. Statement B: Sometimes a few chromosomes have non-staining secondary constriction at a constant location.",["Only statement A is incorrect","Only statement B is incorrect","Both the statements are correct","Both the statements are incorrect"],2,"Both statements are correct. The secondary constriction gives rise to the satellite."),
+Q("Identify True (T) or False (F) statements and choose the correct option. (a) The assembly of microtubules requires mostly ATP and Mg²⁺. (b) The microfilaments help in pseudopodia formation. (c) Cytoskeleton occurs only in eukaryotic cells. (d) Protofilament is made up of α and β sub-units of tubulin protein.",["(a) F, (b) F, (c) T, (d) T","(a) F, (b) T, (c) T, (d) T","(a) T, (b) T, (c) F, (d) T","(a) T, (b) F, (c) T, (d) F"],1,"Microtubule assembly needs GTP (not ATP) and Mg²⁺, so (a) is false. (b), (c) and (d) are taken as true."),
+Q("Zygotene is characterized by (A) Pairing of homologous chromosomes (B) Appearance of synaptonemal complex (C) Formation of bivalents (D) Formation of chiasmata",["(A), (B) & (D) only","(B), (C) & (D) only","All except (B)","All except (D)"],3,"Chiasmata become visible in diplotene, not zygotene."),
+Q("Select the correct statements w.r.t. plasma membrane and choose the option accordingly. (a) Tail of lipid is polar whereas head is non-polar. (b) Integral proteins are totally or partially buried in the membrane. (c) In humans, the membrane of the RBC has approximately 40 percent protein and 52 percent lipids. (d) Proteins move laterally within the overall bilayer of lipid.",["(a) and (b)","(b) and (c)","(a) and (c)","(b) and (d)"],3,"The lipid head is polar and the tail is non-polar, so (a) is false. The RBC membrane has about 52% protein and 40% lipids, so (c) is false."),
+Q("How many of the following features are common in both G₁ and G₂ stages of interphase? (a) Duplication of cell organelles (b) Synthesis of tubulin proteins (c) Deoxyribonucleotide synthesis (d) ATP synthesis",["(a) and (c) only","(a) and (d) only","(a), (b) and (d)","(a), (c) and (d)"],1,"Tubulin synthesis is in G₂ only, and deoxyribonucleotide synthesis is in G₁ only. Organelle duplication and ATP synthesis are common."),
+Q("Identify the wrong statement.",["Spindle fibres attach to kinetochores of chromosomes in metaphase","In metaphase, the morphology of chromosomes is most easily studied","In oocytes of some vertebrates, diplotene can last for months or years","Meiosis occurs only in haploid cells"],3,"Meiosis occurs in diploid meiocytes and produces haploid cells."),
+Q("Match the following columns and select the correct option. Column I: a. β-oxidation of fats, b. Cytoskeleton of cilia, c. Provide support to plasma membrane, d. Activity of hydrolytic enzymes. Column II: (i) Microtubules, (ii) Lysosomes, (iii) Mitochondria, (iv) Microfilaments.",["a(ii), b(iv), c(i), d(iii)","a(iii), b(iv), c(i), d(ii)","a(ii), b(i), c(iv), d(iii)","a(iii), b(i), c(iv), d(ii)"],3,"β-oxidation happens in mitochondria, the cilia core is made of microtubules, microfilaments support the plasma membrane, and lysosomes hold hydrolytic enzymes."),
+Q("Assertion (A): All living phenomena are due to underlying interactions. Reason (R): Properties of cellular organelles are present in the molecular constituents of the organelle.",AR,2,"Properties of organelles are not present in their molecular constituents. They arise from the interactions among those components, so R is false."),
+Q("If a chromosome has a satellite, then how many constrictions in this particular chromosome will be seen in the metaphase of meiosis I?",["Four","Three","Two","Five"],1,"At metaphase the chromosome has two chromatids. That gives 1 primary constriction (centromere) + 2 secondary constrictions (one per chromatid) = 3."),
+Q("The second gap phase of interphase, present between S and M phase, includes all, except",["Synthesis of tubulin protein","Duplication of mitochondria, chloroplast, Golgi bodies","Synthesis of RNA","Synthesis of histone proteins"],3,"Histone proteins are made in S phase along with DNA replication."),
+Q("Calculate the DNA content of a meiocyte at the end of S phase if the cell has 10 pg of DNA at G₁ phase.",["10 pg","40 pg","20 pg","30 pg"],2,"DNA doubles in S phase: 10 pg → 20 pg."),
+Q("How many generations of mitosis are required for producing 128 cells from a single cell?",["127","160","7","5"],2,"2⁷ = 128, so 7 generations."),
+Q("Assertion (A): Chloroplasts are capable of self-duplication. Reason (R): Chloroplasts have circular DNA, 70S ribosomes and different types of RNAs.",AR,0,"Having their own DNA, RNAs and 70S ribosomes lets chloroplasts duplicate themselves, so R explains A."),
+Q("The final stage of karyokinesis of reductional division in meiosis is characterised by which of the following events?",["Start in reduction in the number of chromosomes","Chromatids reach the poles, start uncoiling and become chromatin fibres of interphase nucleus","The chromosomes uncoil and elongate but remain straight","The nucleolus and nuclear membrane start disappearing"],2,"The final stage of meiosis I is telophase I. Chromosomes partly uncoil there, and chromatids do not separate until meiosis II."),
+Q("If a cell (2n = 4) undergoes mitosis, how many daughter chromosomes will be observed once the sister chromatids separate to move towards opposite poles?",["Four","Two","Eight","Six"],2,"4 chromosomes have 8 chromatids. Once they separate, there are 8 daughter chromosomes."),
+Q("Which of the given is the correct reason for no DNA replication in interkinesis?",["In meiosis I, homologous chromosomes separate, not chromatids","In meiosis I, univalents separate along with chromatids","In meiosis I, only chromatids separate but homologous chromosomes remain in pair","In meiosis I, separation of bivalents occurs"],0,"Chromatids stay together, so each chromosome already has two chromatids and DNA need not be replicated again."),
+Q("Which of the given feature(s) is/are not similar between chloroplast and mitochondria? a. Self-duplicating organelles b. Have m-RNA, r-RNA and t-RNA c. Site of carbohydrate oxidation d. Have ATP synthesis enzyme e. Storage of starch",["Only c, d and e","Only c and e","Only a, b and c","Only c"],1,"Carbohydrate oxidation is in mitochondria, and starch is stored in chloroplasts. The other features are shared."),
+Q("Bacteria have specialized invaginations of the cytoplasmic membrane that increase the surface area for their functions. Choose the one which is analogous to mitochondria.",["Pili","Flagella","Mesosomes","Chromatophores"],2,"Mesosomes carry respiratory enzymes, so they are analogous to mitochondria. Chromatophores are analogous to chloroplasts."),
+Q("Select the wrong statement.",["Parenchymatous cells have primary cell wall only","Plasmodesmata is a living component of cell wall","Secondary cell wall is laid during cell differentiation","Adjacent cells in a plant tissue are held together by a thick sticky layer of middle lamella"],2,"The secondary wall is laid down after the cell has stopped growing, when it matures."),
+Q("All of the given are correct features w.r.t. growth, except",["Increase in mass","Increase in number of cells","Irreversible","Takes place on surface of body in living organisms"],3,"In living organisms growth is from inside (intrinsic). Non-living objects grow by accumulation on the surface."),
+Q("Reproduction is synonymous with growth in how many of the following? (Bacteria, unicellular algae, filamentous algae, Amoeba, Planaria, Hydra)",["Four","Three","Two","One"],1,"Reproduction is synonymous with growth only in unicellular organisms: bacteria, unicellular algae and Amoeba."),
+Q("Which of the following pairs is wrongly matched?",["ICNB – Solanum","ICZN – Panthera","ICBN – Mangifera","ICVCN – Virus"],0,"ICNB is the code for bacteria, while Solanum is a plant (covered by ICBN)."),
+Q("All living beings can be distinguished unexceptionally from the non-living objects on the basis of which of the following features?",["Growth","Metabolism","Movement","Self-consciousness"],3,"Growth, metabolism and movement all have exceptions. Consciousness (awareness of the environment) is the defining feature."),
+Q("Read the following statements and choose the correct option. (A) Meiosis increases genetic variability in the population. (B) Meiosis involves crossing over.",["Both statements are correct","Both statements are incorrect","Only statement A is correct","Only statement B is correct"],0,"Crossing over and independent assortment during meiosis increase genetic variability."),
+Q("Assertion (A): Isolated metabolic reactions demonstrated in vitro are living reactions. Reason (R): The sum total of all chemical reactions occurring in the body of a living organism is metabolism.",AR,0,"Metabolic reactions are what define living organisms, so isolated metabolic reactions are living reactions even though they are not living things."),
+Q("A meiocyte has 8 chromosomes and 10 pg DNA at G₁ stage. Calculate the number of chromosomes, chromatids and amount of DNA in the gametes produced by this meiocyte.",["8 chromosomes, 8 chromatids, 2.5 pg","4 chromosomes, 8 chromatids, 5 pg","4 chromosomes, 4 chromatids, 5 pg","4 chromosomes, 4 chromatids, 2.5 pg"],3,"Gametes are haploid: 4 chromosomes, each a single chromatid, and one-quarter of the G₁ DNA = 2.5 pg."),
+Q("A new organism discovered is given a scientific name based on agreed principles and criteria provided in ICBN. This organism would have all the following features, except",["Cell wall made up of cellulose","Nuclear material surrounded by nuclear membrane","Outermost envelope of cell is plasma membrane","Presence of photosynthetic pigments"],2,"Organisms named under ICBN (plants, algae, fungi) have a cell wall outside the plasma membrane, so the plasma membrane is not their outermost envelope."),
+Q("Which one is not a significance of mitosis?",["Growth of multicellular organisms","Restoration of nucleo-cytoplasmic ratio of cell","Replacement of older cells","Increase genetic variability in the population"],3,"Mitosis produces genetically identical cells. Variability comes from meiosis."),
+Q("If a meiocyte of a diploid organism in G₁ phase has 20 chromosomes and 40 pg DNA, then what will be the number of chromosomes (a) and amount of DNA (b) in each cell after completion of meiosis I?",["(a) 20, (b) 40 pg","(a) 10, (b) 20 pg","(a) 10, (b) 40 pg","(a) 20, (b) 80 pg"],2,"DNA doubles to 80 pg in S phase. Meiosis I halves the chromosome number to 10 and gives each cell 40 pg."),
+Q("A metaphasic chromosome in mitotic division is made up of",["2 sister chromatids","4 sister chromatids","2 non-homologous chromosomes","2 homologous chromosomes"],0,"A metaphase chromosome consists of two sister chromatids joined at the centromere."),
+Q("Identify the wrongly matched pair.",["Recombination nodule – Pachytene","Formation of X-shaped structure – Diplotene","Nuclear envelope disintegrates – Diakinesis","Synaptonemal complex dissolves – Zygotene"],3,"The synaptonemal complex dissolves in diplotene, not zygotene."),
+Q("____ exerts the greatest control over the body’s responsiveness to the changing conditions, while ____ is the most abundant and widely distributed tissue in the body of complex animals. Fill in the respective blanks by selecting the correct option.",["Epithelial tissue; neural tissue","Connective tissue; epithelial tissue","Neural tissue; connective tissue","Muscular tissue; epithelial tissue"],2,"Neural tissue controls responsiveness. Connective tissue is the most abundant and widely distributed."),
+Q("Select the incorrect match w.r.t. the monomeric unit of the respective compounds.",["Insulin – Fructose","Chitin – N-acetyl glucosamine","Starch – Glucose","Glycogen – Glucose"],0,"Insulin is a protein, so its monomers are amino acids, not fructose."),
+Q("Osteocytes are present in the fluid-filled spaces called",["Lamellae","Lacunae","Bone marrow","Cell junctions"],1,"Osteocytes sit in fluid-filled spaces called lacunae."),
+Q("Consider the statements given below. Statement (A): The action of muscle fibres moves the body to adjust to the changes in the environment and to maintain the positions of the various parts of the body only along the transverse axis. Statement (B): We are usually unable to contract muscles with spindle-shaped muscle fibres merely by thinking about it, as we can do with multinucleated skeletal muscle fibres. Select the correct option.",["Both statements (A) and (B) are correct","Both statements (A) and (B) are incorrect","Only statement (A) is correct","Only statement (B) is correct"],3,"(A) is wrong because of ‘only along the transverse axis’. (B) is correct: smooth muscle is involuntary, skeletal muscle is voluntary."),
+Q("The following represents an oligopeptide chain: Tyrosine–tryptophan–valine–lysine–lysine–arginine–glycine–alanine. Select the incorrect option w.r.t. it.",["Tyrosine represents the N-terminal while alanine represents the C-terminal amino acid","7 water molecules are produced and released in the formation of the above oligopeptide chain","3 of the amino acids in the above oligopeptide chain are aromatic in nature","More than one amino acid in the oligopeptide chain are neutral in nature"],2,"Only tyrosine and tryptophan are aromatic (2, not 3). 8 amino acids form 7 peptide bonds, releasing 7 water molecules."),
+Q("Tendons and ligaments are the examples of",["Dense regular connective tissue","Dense irregular connective tissue","Specialised connective tissue","Loose connective tissue"],0,"Tendons and ligaments are dense regular connective tissue."),
+Q("Sucrose is a non-reducing sugar as it",["Is a disaccharide","Is composed of glucose and galactose","Does not have a free aldehydic or ketonic group","Does not possess α-1,4 linkage between its component sugars"],2,"The anomeric carbons of glucose and fructose are joined, so there is no free aldehyde or ketone group."),
+Q("The type of cell junctions which perform cementing to keep the neighbouring cells together by forming plaque-like structures are called",["Adhering junctions","Gap junctions","Tight junctions","Communication junctions"],0,"Adhering junctions cement neighbouring cells together."),
+Q("For an enzyme-catalysed reaction, raising the temperature considerably above the optimum value can",["Increase the activation energy","Lead to increased activity of an enzyme","Denature the tertiary structure of an enzyme","Permanently preserve the enzyme in a temporarily inactive state"],2,"High temperature destroys the tertiary structure of the enzyme (denaturation)."),
+Q("Assertion (A): The activity of an enzyme is inhibited in the presence of specific chemicals that bind to the active site of the enzyme. Reason (R): Some specific chemicals which closely resemble the substrate, when attached to the substrate-binding site of the enzyme, enhance the enzymatic activity.",AR,2,"A is true (competitive inhibition). R is false because such chemicals reduce enzyme activity."),
+Q("The type of epithelium that covers the dry surface of the skin also",["Forms the diffusion boundary in lungs","Forms the inner lining of salivary ducts","Lines the fallopian tubes in human females","Lines the complete human respiratory passage"],1,"The skin has compound (stratified) epithelium, which also lines the ducts of salivary glands."),
+Q("Enzymes having the E.C. numbers 2.1.1.6 and 1.2.6.1 belong to which of the following classes of enzymes respectively?",["Transferases and oxidoreductases","Hydrolases and lyases","Isomerases and hydrolases","Dehydrogenases and transferases"],0,"The first digit 2 means transferases, and 1 means oxidoreductases."),
+Q("Select the incorrect option w.r.t. the type of epithelium present in the PCT of the nephron.",["Involved in reabsorption and secretion","Possesses a single layer of cells","Possesses tall and slender cells with basal nuclei","Possesses microscopic projections that increase the surface area"],2,"The PCT has simple cuboidal epithelium with a brush border. Tall, slender cells with basal nuclei describe columnar cells."),
+Q("An amino acid characterised by an additional amino group is",["Lysine","Valine","Cysteine","Glycine"],0,"Lysine has an extra amino group in its side chain."),
+Q("Consider the statements given below. (a) All striated muscle fibres are involuntary. (b) All cylindrical muscle fibres are multinucleated. (c) All multinucleated muscle fibres are voluntary. (d) All involuntary muscle fibres are unstriated. Select the option including the correct statement(s) only.",["(a) and (b)","(a)","(c) and (d)","(c)"],3,"Cardiac muscle is striated and involuntary, so (a) and (d) are false. Cardiac fibres are cylindrical but uninucleate, so (b) is false. Multinucleated skeletal fibres are voluntary, so (c) is true."),
+Q("Assertion (A): Increase in fat storage in adipose tissue leads to increase in size of adipocytes. Reason (R): Fat cells lose their nuclei to store large droplets of fats.",AR,2,"A is true. R is false, because the nucleus is pushed to the periphery, not lost."),
+Q("Select the correct set of secondary metabolites that act as toxins.",["Abrin, Ricin","Anthocyanin, Curcumin","Vinblastin, Cellulose","Concanavalin A, Gum"],0,"Abrin and ricin are toxins. Anthocyanin and curcumin are pigments, vinblastin is a drug, and concanavalin A is a lectin."),
+Q("Consider the statements given below. Statement (A): Blood is characterised by a fluid matrix with formed elements such as erythrocytes, leucocytes and platelets. Statement (B): Catalytic activity of carbonic anhydrase always decreases but is never lost when zinc is removed from this enzyme. Choose the correct option.",["Both statements (A) and (B) are correct","Both statements (A) and (B) are incorrect","Only statement (A) is correct","Only statement (B) is correct"],2,"Zinc is an essential cofactor, so the enzyme loses its catalytic activity without it. (B) is false."),
+Q("The most abundant organic compound in living organisms is",["Water","Protein","Nucleic acids","Carbohydrates"],1,"Protein is the most abundant organic compound. Water is inorganic."),
+Q("Lecithin is composed of",["A glycerol, 3 fatty acids and a phosphate group","A glycerol, 2 fatty acids, 1 phosphate group and 1 choline moiety","Two glycerols, a fatty acid and a choline moiety","A glycerol, 3 fatty acids and 2 choline moieties"],1,"Lecithin is a phospholipid: glycerol + 2 fatty acids + phosphate + choline."),
+Q("Select the incorrect option.",["Adenosine + phosphoric acid = Adenylic acid","Uridylic acid − phosphate group = Uridine","Guanosine + phosphoric acid = Glutamic acid","Thymidylic acid − phosphate group = Thymidine"],2,"Guanosine + phosphoric acid gives guanylic acid. Glutamic acid is an amino acid."),
+Q("Consider the given statements. (A) On the basis of structural modifications of the cells, simple epithelium is divided into squamous, cuboidal and columnar epithelium. (B) In nearly all animal tissues, specialized junctions provide both structural and functional links between its individual cells. (C) Diverse types of connective tissues link, support, strengthen, protect and insulate other tissues or organs of the body. (D) Cardiac muscles constitute the contractile tissue present in the heart. How many of the above statements is/are correct?",["One","Two","Three","Four"],3,"All four statements are correct."),
+Q("Which of the following glandular structures releases its secretions directly into the fluid bathing the gland?",["Salivary gland","Sebaceous gland","Sweat gland","Thyroid gland"],3,"The thyroid is an endocrine gland and releases hormones directly into the fluid around it. The others are exocrine glands."),
+Q("Glucose and ribose are similar to one another as both of them are/contain",["5-carbon containing sugars","O-containing heterocyclic rings","Obtained in retentate fraction upon chemical analysis of a living tissue","Equal number of OH groups"],1,"Both form ring structures containing an oxygen atom (pyranose and furanose rings). Glucose has 6 carbons and 5 OH groups, and ribose has 5 carbons and 4 OH groups. Both are small molecules and come in the filtrate."),
+Q("Consider the following: (a) Smooth muscle fibres in alimentary canal (b) Skeletal muscle fibres in biceps (c) Cardiac muscle fibres in heart. Which of the above possess cell junctions?",["(a) and (c)","(a) and (b)","(b) and (c)","(a), (b) and (c)"],0,"Smooth muscle and cardiac muscle have gap junctions (cardiac also has intercalated discs). Skeletal muscle fibres do not."),
+Q("Arrival of the disturbance at the neuron’s endings, or output zone, triggers events that may cause",["Stimulation or inhibition of adjacent neurons and other cells","Only inhibition of adjacent neurons and other cells","Only stimulation of adjacent neurons and other cells","Stimulation or inhibition of adjacent neurons only and never any other tissue"],0,"A neuron’s output can stimulate or inhibit neighbouring neurons and other cells such as muscle or gland cells."),
+Q("In all connective tissues except specialized connective tissue, the cells secrete fibres of structural proteins called collagen or elastin. Here, ‘cells’ refer to",["Macrophages","Mast cells","Fibroblasts","Adipocytes"],2,"Fibroblasts secrete collagen and elastin fibres."),
+Q("Match column I with column II w.r.t. structure of proteins. Column I: a. Primary structure, b. Secondary structure, c. Tertiary structure, d. Quaternary structure. Column II: (i) Beta-pleated sheets, (ii) Gives positional information of amino acids, (iii) 3-dimensional view, (iv) Assembly of more than one polypeptide.",["a(ii); b(i); c(iii); d(iv)","a(ii); b(i); c(iv); d(iii)","a(ii); b(iv); c(i); d(iii)","a(iii); b(ii); c(iv); d(i)"],0,"Primary gives the sequence of amino acids, secondary includes β-pleated sheets, tertiary is the 3-D shape, and quaternary is the assembly of polypeptides."),
+Q("Malonate inhibits the activity of succinate dehydrogenase during cellular respiration as",["It permanently disables the enzyme by forming a covalent bond with it","Its structure closely resembles succinate, so it competes for the enzyme’s active site and blocks binding of the substrate with the enzyme","It binds at a site different from the active site of the enzyme and induces a change in its shape, thereby decreasing its efficiency","It causes accumulation of products that naturally inhibit the enzyme through feedback"],1,"Malonate is a competitive inhibitor. It resembles the substrate succinate and competes for the active site."),
+Q("The most abundant and the least abundant element in the human body w.r.t. per cent weight are ____ and ____ respectively.",["Oxygen; Nitrogen","Carbon; Magnesium","Oxygen; Silicon","Nitrogen; Carbon"],2,"Oxygen is the most abundant (about 65%). Silicon is negligible in the human body."),
+Q("The co-enzymes nicotinamide adenine dinucleotide (NAD) and NADP contain",["Haem as the prosthetic group","Vitamin niacin","Zinc as a co-factor","Vitamin niacin as the apoenzyme"],1,"NAD and NADP are derived from the vitamin niacin."),
+Q("Select the correct statement.",["In unicellular organisms like Hydra, all functions like digestion, respiration and reproduction are performed by a single cell","In multicellular animals, a group of similar cells along with intercellular substances never perform a specific function","Cells, tissues, organs and organ systems split up the work in a way that exhibits division of labour and contributes to the survival of the body as a whole","The structure of different cells varies according to their function, but there are broadly more than 5 types of tissues in the human body"],2,"Hydra is multicellular. Similar cells with intercellular substances do perform specific functions. There are 4 basic tissue types."),
+Q("The muscle fibres present in biceps differ from those present in muscles of the heart wall as",["Former are multinucleated while latter are uninucleated","Latter are striated while former are non-striated","Former are branched while latter are unbranched","Former have centrally located nuclei while latter have peripheral nuclei"],0,"Skeletal muscle fibres are multinucleated and unbranched. Cardiac fibres are uninucleated and branched. Both are striated."),
+Q("How many deoxyribose sugar residues are present in a 340 Å long double-stranded B-DNA fragment?",["200","180","100","400"],0,"B-DNA has 3.4 Å per base pair, so 340 Å = 100 base pairs = 200 nucleotides = 200 deoxyribose sugars."),
+Q("How many of the compounds mentioned in the box below possess peptide bonds? Box: Collagen, Glutamic acid, GLUT-4, Antibody, Cysteine, Insulin. Select the correct option.",["Three","Four","Two","Six"],1,"Collagen, GLUT-4, antibody and insulin are proteins. Glutamic acid and cysteine are single amino acids."),
+Q("Consider the given structures: (a) Dendrites (b) Axon (c) RER (d) Free ribosomes. Select the option that includes the structures exclusively present in a neuron.",["(a) and (d)","(a), (b) and (c)","(b), (c) and (d)","(a) and (b)"],3,"Dendrites and axon are found only in neurons. RER and free ribosomes are present in most cells."),
+Q("Choose the odd one w.r.t. an adult human haemoglobin.",["2α chains","2β chains","Quaternary structure","2γ chains"],3,"Adult haemoglobin has 2α and 2β chains. γ chains are found in foetal haemoglobin."),
+Q("Select the incorrect match.",["Inner lining of blood vessels – Squamous epithelium","Fallopian tubes – Ciliated epithelium","Inner lining of stomach – Brush-border cuboidal epithelium","Bronchioles – Ciliated epithelium"],2,"The stomach lining is columnar epithelium. Brush-border cuboidal epithelium is found in the PCT."),
+Q("How many of the bonds mentioned below are hydrolysed by class III enzymes? C–halide, Peptide, Glycosidic, C–C, P–N. Choose the correct option.",["Two","Five","Four","Three"],1,"Class III enzymes are hydrolases, which act on ester, glycosidic, peptide, C–halide, C–C and P–N bonds. All five are hydrolysed."),
+Q("Rate of a reaction can be defined/stated as (a) Amount of product formed per unit time (b) Velocity of reaction, if direction is not specified (c) Increase in substrate concentration per unit time. Choose the correct option.",["(c) only","(b) only","(b) and (c) only","(a) only"],3,"Rate is the amount of product formed per unit time. It is called velocity only when the direction is specified. Substrate concentration decreases, not increases."),
+Q("Assertion (A): Gingelly oil remains liquid at room temperature as compared to fats like ghee in winters. Reason (R): Oils have a lower melting point than fats and do not solidify at lower temperature. In the light of the above statements, select the correct option.",AR,0,"Oils have lower melting points, so they stay liquid. R explains A."),
+Q("Select the incorrect statement.",["An enzyme like any other carbohydrate has secondary and tertiary structure","Thermal stability is an important quality of enzymes like Taq polymerase, isolated from thermophilic bacteria","A general rule of thumb is that the rate of reaction doubles or decreases by half for every 10°C change in either direction","The effect of a competitive inhibitor can be reversed by increasing the substrate concentration"],0,"Enzymes are proteins, not carbohydrates. Secondary and tertiary structures belong to proteins."),
+Q("Both cholesterol and serine",["Contain homocyclic rings in their structure","Are obtained in the acid-insoluble pool obtained upon chemical analysis of a living tissue","Comprise a single –OH group in their structures","Are obtained in the acid-soluble fraction obtained upon chemical analysis of a living tissue"],2,"Each has a single alcoholic –OH group. Serine has no ring, and cholesterol (a lipid) and serine (an amino acid) are in different pools."),
+Q("Among the following, choose the one which is a component of the monomeric unit of DNA.",["Galactose","Glucose","Deoxyribose","Ribose"],2,"The nucleotide of DNA contains deoxyribose sugar."),
+Q("Match column I with column II. Column I: a. Exocrine gland, b. Unicellular gland, c. Endocrine gland, d. Multicellular gland. Column II: (i) Salivary gland, (ii) Milk, (iii) Insulin, (iv) Goblet cell of alimentary canal.",["a(iii); b(iv); c(ii); d(i)","a(iii); b(i); c(ii); d(iv)","a(ii); b(iv); c(iii); d(i)","a(ii); b(i); c(iii); d(iv)"],2,"Exocrine glands secrete products such as milk through ducts. A goblet cell is a unicellular gland, insulin comes from an endocrine gland, and the salivary gland is multicellular.")
+];
+// ==================================================
+
+const app = document.getElementById("app");
+let cur = 0, ans = [], left = DURATION_MIN * 60, tick = null, submitted = false;
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function fmt(s){const m=Math.floor(s/60),r=s%60;return String(m).padStart(2,"0")+":"+String(r).padStart(2,"0");}
+const L = ["A","B","C","D","E","F"];
+
+function start(){
+  ans = QUESTIONS.map(()=>null); cur = 0; left = DURATION_MIN*60; submitted = false;
+  clearInterval(tick);
+  tick = setInterval(()=>{
+    left--;
+    const t = document.getElementById("t"); if(t) t.textContent = fmt(Math.max(left,0));
+    if(left<=0) submit(true);
+  },1000);
+  renderTest();
+}
+
+function home(){
+  app.innerHTML = `<div class="card"><h1>${esc(TITLE)}</h1>
+  <p class="mu">${QUESTIONS.length} questions · ${DURATION_MIN} minutes · +${MARKS_RIGHT} for each correct answer, ${MARKS_WRONG} for each wrong answer, 0 if left blank.</p>
+  <p>Pick one option for each question. You can move between questions and change answers until you submit. The correct answers are shown after you submit.</p>
+  <button class="p" id="go">Start test</button></div>`;
+  document.getElementById("go").onclick = start;
+}
+
+function renderTest(){
+  const q = QUESTIONS[cur];
+  const pal = QUESTIONS.map((_,i)=>`<button data-i="${i}" class="${ans[i]!==null?"done":""} ${i===cur?"cur":""}">${i+1}</button>`).join("");
+  app.innerHTML = `
+  <div class="top"><span class="mu">Question ${cur+1} of ${QUESTIONS.length}</span><span class="timer" id="t">${fmt(Math.max(left,0))}</span></div>
+  <div class="card"><h2>${esc(q.q)}</h2>
+  ${q.options.map((o,i)=>`<button class="opt ${ans[cur]===i?"sel":""}" data-o="${i}"><b>${L[i]}.</b> ${esc(o)}</button>`).join("")}
+  <div class="nav"><button id="prev" ${cur===0?"disabled":""}>Previous</button><button id="clr">Clear</button><button id="next" ${cur===QUESTIONS.length-1?"disabled":""}>Next</button></div></div>
+  <div class="card"><div class="pal">${pal}</div></div>
+  <button class="p" id="sub" style="width:100%">Submit test</button>`;
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{ans[cur]=+b.dataset.o;renderTest();});
+  app.querySelectorAll(".pal button").forEach(b=>b.onclick=()=>{cur=+b.dataset.i;renderTest();});
+  document.getElementById("prev").onclick=()=>{cur--;renderTest();};
+  document.getElementById("next").onclick=()=>{cur++;renderTest();};
+  document.getElementById("clr").onclick=()=>{ans[cur]=null;renderTest();};
+  document.getElementById("sub").onclick=()=>{
+    const un = ans.filter(a=>a===null).length;
+    const box=document.createElement("div"); box.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50"; box.innerHTML=`<div class="card" style="max-width:380px;margin:0"><h2>Submit test?</h2><p class="mu">${un?`You have ${un} unanswered question(s).`:"You have answered all questions."} You can’t change answers after submitting.</p><div class="nav"><button id="cn">Go back</button><button class="p" id="cy">Yes, submit</button></div></div>`; document.body.appendChild(box); document.getElementById("cn").onclick=()=>box.remove(); document.getElementById("cy").onclick=()=>{box.remove(); submit(false);};
+  };
+}
+
+function submit(auto){
+  if(submitted) return; submitted = true; clearInterval(tick);
+  let right=0,wrong=0,blank=0;
+  QUESTIONS.forEach((q,i)=>{ if(ans[i]===null) blank++; else if(ans[i]===q.answer) right++; else wrong++; });
+  const score = right*MARKS_RIGHT + wrong*MARKS_WRONG, max = QUESTIONS.length*MARKS_RIGHT, pct = Math.max(0, Math.round(score/max*1000)/10);
+  const review = QUESTIONS.map((q,i)=>{
+    const st = ans[i]===null ? "Not answered" : ans[i]===q.answer ? "Correct" : "Wrong";
+    return `<div class="card"><div class="mu">Question ${i+1} · <span class="tag" style="color:${st==="Correct"?"var(--ok)":st==="Wrong"?"var(--no)":"var(--mu)"}">${st}</span></div>
+    <h2>${esc(q.q)}</h2>
+    ${q.options.map((o,j)=>`<div class="opt ${j===q.answer?"ok":(j===ans[i]?"no":"")}"><b>${L[j]}.</b> ${esc(o)}${j===q.answer?" ✔":""}${j===ans[i]&&j!==q.answer?" (your answer)":""}</div>`).join("")}
+    ${ans[i]!==q.answer?`<div class="ex"><b>Correct answer:</b> ${L[q.answer]}. ${esc(q.options[q.answer])}</div>`:""}${q.explain?`<div class="ex"><b>Explanation:</b> ${esc(q.explain)}</div>`:""}</div>`;
+  }).join("");
+  app.innerHTML = `<div class="card"><h1>Test submitted${auto?" (time up)":""}</h1>
+  <div class="score">${pct}%</div><div class="mu">Marks: ${score} out of ${max}</div>
+  <div class="stats"><span>✔ Correct: <b>${right}</b></span><span>✘ Wrong: <b>${wrong}</b></span><span>– Skipped: <b>${blank}</b></span></div>
+  <p class="mu">Scroll down to see the correct answers.</p><button class="p" id="again">Retake test</button></div>${review}`;
+  document.getElementById("again").onclick = start;
+  window.scrollTo(0,0);
+}
+
+home();
+</script>
+</body>
+</html>
